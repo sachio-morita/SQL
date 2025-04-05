@@ -1,4 +1,3 @@
-# SQL
 # Sachio´s SQL Portfolio
 
 ## Welcome to my SQL portfolio! 
