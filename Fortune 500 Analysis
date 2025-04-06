@@ -1,4 +1,4 @@
-# This portfolio will reference the data below provided by Break Into Tech
+## This portfolio will reference the data below provided by Break Into Tech
 
 CREATE TABLE fortune_companies (
     company_id INTEGER PRIMARY KEY,
@@ -66,7 +66,7 @@ VALUES
 SELECT * FROM fortune_companies
 LIMIT 1;
 
-### 1.Display the top 5 companie from the data set with the most to least paid_time_off_days. 
+### 1.Query the top 5 companie from the data set with the most to least paid_time_off_days. 
 
 SELECT company_name, paid_time_off_days 
 AS PTO 
@@ -75,7 +75,7 @@ WHERE PTO>=10
 ORDER BY PTO DESC 
 LIMIT 5; 
 
-### 2.Display industries and their respective average PTO, given that the companies provoides over 10 days of PTO.
+### 2.Query industries and their respective average PTO, given that the companies provoides over 10 days of PTO.
 
 SELECT industry, 
 ROUND(SUM(paid_time_off_days) / COUNT(*)) AS avg_PTO
@@ -83,12 +83,12 @@ FROM fortune_companies
 GROUP BY industry
 HAVING avg_PTO > 10;
 
-### 3.Grade each company based on their avgerage turnover rate, and display them from most retention to lowest retention. 
+### 3.Grade each company based on their avgerage turnover rate, and query them from most retention to lowest retention. 
 ### include their name =, the number of employees, as well as availability for healthcaere as a reference.
 
 SELECT company_name, employees, healthcare_benefits,
-CASE 
-	WHEN avg_employee_tenure >= 7 
+  CASE 
+    WHEN avg_employee_tenure >= 7 
     THEN 'A grade stability'
     WHEN avg_employee_tenure >= 6
     THEN 'B grade stability'
@@ -101,32 +101,28 @@ END AS 'Employee_turnover'
 FROM fortune_companies
 ORDER BY Employee_turnover;
 
-### 4. 
+### 4. Query name, industry revenue and employees of companies that are not in finance or financials and thos who do not provide any healthcare benefits.
 
+SELECT company_name, industry, revenue,  employees
+FROM fortune_companies
+WHERE industry NOT IN ('finan%')
+AND healthcare_benefits = 0;
 
+### 5. Query the name of companies where the average revenue contribution by employee (when divided evenly) is less than 0.0001th place. 
 
+SELECT company_name, ROUND((revenue) / employees,5) AS revenue_per_employee
+FROM fortune_companies
+WHERE ROUND((revenue) / employees,1) <0.0001;
 
+### 6. Query the name of companies and clarify either they provide healthcare benefits or not. Display each of their avegrage employee renetion period.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+SELECT company_name,
+avg_employee_tenure,
+	CASE
+		WHEN healthcare_benefits = 1
+        THEN 'Available'
+        WHEN healthcare_benefits = 0
+        THEN 'Not available'
+	ELSE NULL
+   END AS 'Healhcare'
+FROM fortune_companies;
