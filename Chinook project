@@ -1,0 +1,84 @@
+#1.Query all artist's names, their album title, the number of songs, and their genre. 
+
+SELECT 
+artists.name, albums.title AS Album_title, COUNT(tracks.name) AS tracks, genres.name AS Genre
+FROM artists
+LEFT JOIN albums
+on artists.ArtistId = albums.ArtistId
+LEFT JOIN tracks
+ON albums.AlbumId = tracks.AlbumId
+LEFT JOIN genres
+ON tracks.GenreId = genres.GenreId
+GROUP BY artists.name
+;
+
+# 2.Show Customers (their full names, customer ID, and country) who are not in the US
+
+SELECT 
+FirstName, LastName, customers.customerId, Country
+FROM customers
+WHERE 
+Country <> 'USA'
+;
+
+#3. Provide a query that shows the invoices associated with each sales agent. The resulting table should include the Sales Agent's full name.
+
+SELECT 
+e.LastName, e.FirstName, i.InvoiceId
+FROM employees e 
+JOIN customers c 
+ON e.EmployeeId = c.SupportRepId
+JOIN invoices i 
+ON c.CustomerId = i.CustomerId
+;
+
+#4. How many Invoices were there in 2009?
+
+SELECT COUNT(*) 
+FROM invoices 
+WHERE 
+InvoiceDate LIKE '2009%'
+;
+
+#5. Show the total sales made by each sales agent.
+
+SELECT 
+e.LastName, e.FirstName, ROUND(SUM(i.Total),2) AS 'Total Sales'
+FROM employees e 
+
+JOIN customers c 
+ON e.EmployeeId = c.SupportRepId
+
+JOIN invoices i 
+ON c.CustomerId = i.CustomerId
+
+WHERE e.Title = 'Sales Support Agent' 
+GROUP BY e.EmployeeId
+; 
+
+#6. Show the full name of an employee and the last name of who they report to. 
+
+SELECT 
+reporter.EmployeeId, reporter.FirstName, reporter.LastName, reporter.ReportsTo, receiver.LastName AS 'Report receiver'
+FROM employees reporter
+LEFT JOIN employees receiver 
+ON reporter.ReportsTo = receiver.EmployeeId
+;
+
+# 7. Show how many sales were made per artis. 
+
+SELECT 
+art.Name, alb.Title, SUM(Quantity) 
+FROM artists art
+
+LEFT JOIN albums alb 
+ON art.ArtistId = alb.ArtistId
+
+LEFT JOIN tracks
+ON tracks.AlbumId = alb.AlbumId
+
+LEFT JOIN invoice_items 
+ON tracks.TrackId = invoice_items.TrackId
+
+GROUP BY art.Name
+;
